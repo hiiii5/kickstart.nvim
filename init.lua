@@ -221,6 +221,14 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- [[ Optional: Start a server for Godot project ]]
+-- This looks for a `project.godot` file in the current directory and starts a server for remote file opening in Godot
+local gdproject = vim.fn.getcwd() .. '/project.godot'
+if vim.fn.findfile(gdproject, '.') ~= '' then
+  print 'Found Godot project, starting server...'
+  vim.fn.serverstart '127.0.0.1:9696'
+end
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -536,6 +544,11 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+      require('lspconfig').gdscript.setup {
+        capabilities = capabilities,
+        cmd = { 'ncat', '127.0.0.1', '6005' },
+      }
+
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --
@@ -559,7 +572,6 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
-        --
 
         lua_ls = {
           -- cmd = {...},
@@ -772,6 +784,8 @@ require('lazy').setup({
       require('nvim-autopairs').setup {}
     end,
   },
+  { 'github/copilot.vim' },
+  { 'habamax/vim-godot' },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
