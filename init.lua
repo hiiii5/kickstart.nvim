@@ -103,6 +103,7 @@ vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
+vim.opt.expandtab = false
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -786,7 +787,80 @@ require('lazy').setup({
   },
   { 'github/copilot.vim' },
   { 'habamax/vim-godot' },
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+      harpoon:setup {}
 
+      local conf = require('telescope.config').values
+      local function toggle_telescope(harpoon_files)
+        local file_paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+          table.insert(file_paths, item.value)
+        end
+
+        require('telescope.pickers')
+          .new({}, {
+            prompt_title = 'Harpoon',
+            finder = require('telescope.finders').new_table {
+              results = file_paths,
+            },
+            previewer = conf.file_previewer {},
+            sorter = conf.generic_sorter {},
+          })
+          :find()
+      end
+      -- Harpoon kebinds
+      vim.keymap.set('n', '<leader>a', function()
+        harpoon:list():append()
+      end, { desc = 'Add to harpoon' })
+      vim.keymap.set('n', '<leader>x', function()
+        harpoon:list():remove()
+      end, { desc = 'Remove from harpoon' })
+      vim.keymap.set('n', '<C-e>', function()
+        toggle_telescope(harpoon:list())
+      end, { desc = 'Open harpoon window' })
+      vim.keymap.set('n', '<C-h>', function()
+        harpoon:list():select(1)
+      end, { desc = 'Select harpoon item 1' })
+      vim.keymap.set('n', '<C-t>', function()
+        harpoon:list():select(2)
+      end, { desc = 'Select harpoon item 2' })
+      vim.keymap.set('n', '<C-n>', function()
+        harpoon:list():select(3)
+      end, { desc = 'Select harpoon item 3' })
+      vim.keymap.set('n', '<C-s>', function()
+        harpoon:list():select(4)
+      end, { desc = 'Select harpoon item 4' })
+
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set('n', '<C-S-P>', function()
+        harpoon:list():prev()
+      end, { desc = 'Select previous harpoon item' })
+      vim.keymap.set('n', '<C-S-N>', function()
+        harpoon:list():next()
+      end, { desc = 'Select next harpoon item' })
+
+      harpoon:extend {
+        UI_CREATE = function(cx)
+          vim.keymap.set('n', '<C-v>', function()
+            harpoon.ui:select_menu_item { vsplit = true }
+          end, { buffer = cx.bufnr, desc = 'Open in harpoon item in vertical split' })
+
+          vim.keymap.set('n', '<C-x>', function()
+            harpoon.ui:select_menu_item { split = true }
+          end, { buffer = cx.bufnr, desc = 'Open in harpoon item in horizontal split' })
+
+          vim.keymap.set('n', '<C-t>', function()
+            harpoon.ui:select_menu_item { tabedit = true }
+          end, { buffer = cx.bufnr, desc = 'Open in harpoon item in new tab' })
+        end,
+      }
+    end,
+  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -869,7 +943,7 @@ require('lazy').setup({
   --
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.lint',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
