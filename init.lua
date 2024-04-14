@@ -103,7 +103,6 @@ vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
-vim.opt.expandtab = false
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -166,6 +165,8 @@ vim.opt.scrolloff = 10
 -- [[ My Custom Rempas ]]
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/.config/nvim/init.lua<CR>')
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
@@ -828,16 +829,16 @@ require('lazy').setup({
       vim.keymap.set('n', '<C-e>', function()
         toggle_telescope(harpoon:list())
       end, { desc = 'Open harpoon window' })
-      vim.keymap.set('n', '<C-h>', function()
+      vim.keymap.set('n', '<a-1>', function()
         harpoon:list():select(1)
       end, { desc = 'Select harpoon item 1' })
-      vim.keymap.set('n', '<C-t>', function()
+      vim.keymap.set('n', '<a-2>', function()
         harpoon:list():select(2)
       end, { desc = 'Select harpoon item 2' })
-      vim.keymap.set('n', '<C-n>', function()
+      vim.keymap.set('n', '<a-3>', function()
         harpoon:list():select(3)
       end, { desc = 'Select harpoon item 3' })
-      vim.keymap.set('n', '<C-s>', function()
+      vim.keymap.set('n', '<a-4>', function()
         harpoon:list():select(4)
       end, { desc = 'Select harpoon item 4' })
 
