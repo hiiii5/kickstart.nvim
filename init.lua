@@ -707,12 +707,6 @@ require('lazy').setup({
 
   -- [[ My custom plugins ]]
   {
-    'windwp/nvim-autopairs',
-    config = function()
-      require('nvim-autopairs').setup {}
-    end,
-  },
-  {
     'stevearc/oil.nvim',
     config = function()
       require('oil').setup {
@@ -876,6 +870,8 @@ require('lazy').setup({
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns',
+  require 'kickstart.plugins.autopairs',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
