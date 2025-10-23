@@ -72,6 +72,10 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
+    vim.keymap.set('n', '<leader>k', function()
+      dapui.eval()
+    end, { desc = 'inspect variable' })
+    vim.keymap.set('n', '<leader>q', "<cmd>lua require'dap'.disconnect({disconnectDebuggee = true})<CR><cmd>lua require'dapui'.close()<CR>")
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
